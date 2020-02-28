@@ -1,13 +1,15 @@
 'use strict';
 
-var objectQuantity = 25;
+var OBJECT_QUANTITY = 25;
 var objectNumber = 0;
 var minQuantityLikes = 15;
 var maxQuantityLikes = 200;
 var minQuantityComment = 2;
-var maxQuantityComment = 6;
+var maxQuantityComment = 4;
 var minQuantityAvatar = 1;
 var maxQuantityAvatar = 6;
+var minQuantityMessage = 1;
+var maxQuantityMessage = 2;
 
 var getMix = function (array) {
   for (var i = array.length - 1; i > 0; i--) {
@@ -25,8 +27,8 @@ var getRandomNumber = function (min, max) {
 
 var getImageAddress = function () {
   var imageAddress = [];
-  for (var i = 1; i <= objectQuantity; i++) {
-    imageAddress.push(i);
+  for (var i = 0; i < OBJECT_QUANTITY; i++) {
+    imageAddress.push(i + 1);
   }
   return imageAddress;
 };
@@ -36,8 +38,8 @@ var getRandomItem = function (arr) {
   return arr[rand];
 };
 
-var commentatorsNames = ['Олег', 'Василий', 'Яна', 'Алёна', 'Игорь', 'Андрей'];
-var commentatorsMessages = [
+var COMMENTATORS_NAMES = ['Олег', 'Василий', 'Яна', 'Алёна', 'Игорь', 'Андрей'];
+var COMMENTATORS_MESSAGES = [
   'В целом всё неплохо. Но не всё.!',
   'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
   'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
@@ -45,6 +47,18 @@ var commentatorsMessages = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!',
   'Всё отлично!'
 ];
+
+var quantityComment = getRandomNumber(minQuantityMessage, maxQuantityMessage);
+
+var getRandomMessage = function (commentQuantity) {
+  var comment = getRandomItem(COMMENTATORS_MESSAGES);
+  if (commentQuantity === maxQuantityMessage) {
+    comment = getRandomItem(COMMENTATORS_MESSAGES) + ' ' + getRandomItem(COMMENTATORS_MESSAGES);
+  }
+  return comment;
+};
+
+getRandomMessage(quantityComment);
 
 var getRandomObject = function (object) {
   var randomObject = [];
@@ -56,8 +70,8 @@ var getRandomObject = function (object) {
       var commentatorDate = [
         {
           avatar: 'img/avatar-' + getRandomNumber(minQuantityAvatar, maxQuantityAvatar) + '.svg',
-          message: getRandomItem(commentatorsMessages),
-          name: getRandomItem(commentatorsNames)
+          message: getRandomMessage(quantityComment),
+          name: getRandomItem(COMMENTATORS_NAMES)
         }
       ];
       randomComments.push(commentatorDate);
@@ -76,7 +90,7 @@ var getRandomObject = function (object) {
   return randomObject;
 };
 
-var randObject = getRandomObject(objectQuantity);
+var randObject = getRandomObject(OBJECT_QUANTITY);
 var randomPhoto = getMix(randObject);
 
 var simularPicture = document.querySelector('.pictures');
@@ -107,7 +121,7 @@ bigPicture.querySelector('.social__caption').textContent = randomPhoto[objectNum
 bigPicture.querySelector('.likes-count').textContent = randomPhoto[objectNumber][0].likes;
 bigPicture.querySelector('.comments-count').textContent = randomPhoto[objectNumber][0].comments.length;
 
-var bigPictureComments = function () {
+var renderPictureComments = function () {
   var elements = document.querySelectorAll('.social__comment');
   for (var j = 0; j < elements.length; j++) {
     var element = elements[j];
@@ -117,7 +131,7 @@ var bigPictureComments = function () {
   }
 };
 
-bigPictureComments();
+renderPictureComments();
 
 var addClass = function (tagName, className) {
   var element = document.querySelector(tagName);
